@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 # Ensure deep-translator is installed
 os.system("pip install deep-translator")
 os.system("pip install opencv-python")
+os.system("pip install pytesseract")
 
 # Load trained Fake News Model & Tokenizer
 with open('fake_news_model.pkl', 'rb') as model_file:
