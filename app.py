@@ -2,6 +2,8 @@ import streamlit as st
 import os
 import subprocess
 import pickle
+import os
+os.system("pip install deep-translator")
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Load trained Fake News Model & Tokenizer
