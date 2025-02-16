@@ -2,9 +2,10 @@ import streamlit as st
 import os
 import subprocess
 import pickle
-import os
-os.system("pip install deep-translator")
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+# Ensure deep-translator is installed
+os.system("pip install deep-translator")
 
 # Load trained Fake News Model & Tokenizer
 with open('fake_news_model.pkl', 'rb') as model_file:
@@ -22,9 +23,7 @@ def predict_news(text):
 
 def main():
     st.title("📰 Fake News Detector with Image & Text Support")
-
-    st.write("\n\n")
-
+    
     st.write("📝 **Note:** Refresh after every use before new data input.")
 
     # Remove previous files on reload
@@ -55,36 +54,63 @@ def main():
             # Run ImageToText.py
             subprocess.run(["python", "ImageToText.py"])
 
+            # Debugging: Check if text_data.txt exists
+            if os.path.exists("text_data.txt"):
+                with open("text_data.txt", "r", encoding="utf-8") as check_file:
+                    extracted_text = check_file.read().strip()
+                    if extracted_text:
+                        st.write("✅ Extracted Text from Image!")
+                    else:
+                        st.write("❌ Image text extraction failed: `text_data.txt` is empty!")
+            else:
+                st.write("❌ `text_data.txt` was not created!")
+
             # Run translation_to_english.py
             subprocess.run(["python", "translation_to_english.py"])
 
     elif option == "Enter Text":
         text_input = st.text_area("🔍 Enter Text Manually (Max: 4999 characters):", max_chars=4999)
-        if text_input:
-            # Save language in a separate file
-            with open("language.txt", "w", encoding="utf-8") as lang_file:
-                lang_file.write(language)
 
-            # Save text input in a separate file
-            with open("text_data.txt", "w", encoding="utf-8") as text_file:
-                text_file.write(text_input[:4999])  # Ensuring the text is within limit
+        if st.button("🔄 Process Text"):
+            if text_input.strip():  # Ensure it's not empty
+                # Save language selection
+                with open("language.txt", "w", encoding="utf-8") as lang_file:
+                    lang_file.write(language)
 
-            # Run translation_to_english.py
-            subprocess.run(["python", "translation_to_english.py"])
+                # Save user input in text_data.txt
+                with open("text_data.txt", "w", encoding="utf-8") as text_file:
+                    text_file.write(text_input.strip())
+
+                # Verify if text was saved
+                with open("text_data.txt", "r", encoding="utf-8") as check_file:
+                    saved_text = check_file.read().strip()
+                    if saved_text:
+                        st.write("✅ Text successfully saved!")
+                    else:
+                        st.write("❌ Error: Text not saved correctly!")
+
+                # Run translation script
+                subprocess.run(["python", "translation_to_english.py"])
+            else:
+                st.write("❌ Please enter some text before processing.")
 
     # Display translated text & predict fake news
     if os.path.exists("translated.txt"):
         with open("translated.txt", "r", encoding="utf-8") as trans_file:
-            translated_text = trans_file.read()
-        
-        st.subheader("🌍 Translated Text:")
-        st.write(translated_text)
+            translated_text = trans_file.read().strip()
 
-        # Predict Fake or True News
         if translated_text:
+            st.subheader("🌍 Translated Text:")
+            st.write(translated_text)
+
+            # Predict Fake or True News
             prediction = predict_news(translated_text)
             st.subheader("📰 **News Authenticity:**")
             st.write(prediction)
+        else:
+            st.write("❌ Translation failed: `translated.txt` is empty!")
+    else:
+        st.write("❌ Translation file `translated.txt` not found!")
 
 if __name__ == "__main__":
     main()
