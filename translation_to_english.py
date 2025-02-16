@@ -3,8 +3,8 @@ import os
 
 def read_files():
     """Reads language and text content from files."""
-    lang_file_path = r"C:\pendrive\Hackathon\language.txt"
-    text_file_path = r"C:\pendrive\Hackathon\text_data.txt"
+    lang_file_path = r"language.txt"
+    text_file_path = r"text_data.txt"
 
     language = open(lang_file_path, "r", encoding="utf-8").read().strip().lower() if os.path.exists(lang_file_path) else "english"
     text_content = open(text_file_path, "r", encoding="utf-8").read().strip() if os.path.exists(text_file_path) else ""
@@ -34,7 +34,7 @@ def translate_text(text, language):
 
 def save_translated_text(translated_text):
     """Saves the translated text to translated.txt."""
-    translated_file_path = r"C:\pendrive\Hackathon\translated.txt"
+    translated_file_path = r"translated.txt"
     with open(translated_file_path, "w", encoding="utf-8") as trans_file:
         trans_file.write(translated_text)
     
