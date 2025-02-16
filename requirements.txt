@@ -7,3 +7,4 @@ setuptools
 tensorflow
 opencv-python
 deep-translator
+streamlit
