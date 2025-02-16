@@ -21,6 +21,10 @@ def predict_news(text):
 def main():
     st.title("📰 Fake News Detector with Image & Text Support")
 
+    st.write("\n\n")
+
+    st.write("📝 **Note:** Refresh after every use before new data input.")
+
     # Remove previous files on reload
     for file in ["uploaded_image.jpg", "language.txt", "text_data.txt", "translated.txt"]:
         if os.path.exists(file):
