@@ -3,6 +3,7 @@ import pytesseract
 import os
 import platform
 
+os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/4.00/tessdata"
 # Auto-detect Tesseract path (for local Windows users)
 if platform.system() == "Windows":
     tess_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
